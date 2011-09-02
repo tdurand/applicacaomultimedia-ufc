@@ -56,11 +56,34 @@ public class RTPpacket{
     //.............
     //TO COMPLETE
     //.............
-    //fill the header array of byte with RTP header fields
+    //Fill the header array of byte with RTP header fields
+    //----------------------------------------------------
+    
+    /*      
+     * bits 0-1: Version
+     * bit    2: Padding 
+     * bit    3: Extension
+     * bits 4-7: CC
+     */
+    header[0]=(byte)((Version << 6)|(Padding << 5)|(Extension << 6)|CC);
+    
+    /* 
+     * bit    0: Marker
+     * bits 1-7: PayloadType
+     */
+    header[1] = (byte)( (Marker << 7)|PayloadType );
+    
+    /* SequenceNumber takes 2 bytes = 16 bits */
+    header[2] = (byte)( SequenceNumber >> 8 );
+    header[3] = (byte)( SequenceNumber );
+    
+    /* TimeStamp takes 4 bytes = 32 bits */
+    for ( int i = 0; i < 4; i++ )
+        header[7-i] = (byte)( TimeStamp >> (8*i) );
 
-    //header[0] = ...
-    // .....
-
+    /* Ssrc takes 4 bytes = 32 bits */
+    for ( int i = 0; i < 4; i++ )
+        header[11-i] = (byte)( Ssrc >> (8*i) );
 
     //fill the payload bitstream:
     //--------------------------
@@ -68,7 +91,7 @@ public class RTPpacket{
     payload = new byte[data_length];
 
     //fill payload array of byte from data (given in parameter of the constructor)
-    //......
+    payload = data;
 
     // ! Do not forget to uncomment method printheader() below !
 

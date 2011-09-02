@@ -312,7 +312,7 @@ public class Server extends JFrame implements ActionListener {
       RTSPBufferedWriter.write("CSeq: "+RTSPSeqNb+CRLF);
       RTSPBufferedWriter.write("Session: "+RTSP_ID+CRLF);
       RTSPBufferedWriter.flush();
-      //System.out.println("RTSP Server - Sent response to Client.");
+      System.out.println("RTSP Server - Sent response to Client.");
     }
     catch(Exception ex)
       {
