@@ -36,7 +36,7 @@ public class Client{
   //----------------
   DatagramPacket rcvdp; //UDP packet received from the server
   DatagramSocket RTPsocket; //socket to be used to send and receive UDP packets
-  static int RTP_RCV_PORT = 25000; //port where the client will receive the RTP packets
+  public int RTP_RCV_PORT; //port where the client will receive the RTP packets
 
   Timer timer; //timer used to receive data from the UDP socket
   byte[] buf; //buffer used to store data received from the server
@@ -50,11 +50,11 @@ public class Client{
   static int state; //RTSP state == INIT or READY or PLAYING
   Socket RTSPsocket; //socket used to send/receive RTSP messages
   //input and output stream filters
-  static BufferedReader RTSPBufferedReader;
-  static BufferedWriter RTSPBufferedWriter;
-  static String VideoFileName; //video file to request to the server
-  int RTSPSeqNb = 0; //Sequence number of RTSP messages within the session
-  int RTSPid = 0; //ID of the RTSP session (given by the RTSP Server)
+  public BufferedReader RTSPBufferedReader;
+  public BufferedWriter RTSPBufferedWriter;
+  public String VideoFileName; //video file to request to the server
+  public int RTSPSeqNb = 0; //Sequence number of RTSP messages within the session
+  public int RTSPid = 0; //ID of the RTSP session (given by the RTSP Server)
 
   final static String CRLF = "\r\n";
 
@@ -127,15 +127,17 @@ public class Client{
     InetAddress ServerIPAddr = InetAddress.getByName(ServerHost);
 
     //get video filename to request:
-    VideoFileName = argv[2];
+    theClient.VideoFileName = argv[2];
+    
+    theClient.RTP_RCV_PORT = Integer.parseInt(argv[3]);
 
     //Establish a TCP connection with the server to exchange RTSP messages
     //------------------
     theClient.RTSPsocket = new Socket(ServerIPAddr, RTSP_server_port);
 
     //Set input and output stream filters:
-    RTSPBufferedReader = new BufferedReader(new InputStreamReader(theClient.RTSPsocket.getInputStream()) );
-    RTSPBufferedWriter = new BufferedWriter(new OutputStreamWriter(theClient.RTSPsocket.getOutputStream()) );
+    theClient.RTSPBufferedReader = new BufferedReader(new InputStreamReader(theClient.RTSPsocket.getInputStream()) );
+    theClient.RTSPBufferedWriter = new BufferedWriter(new OutputStreamWriter(theClient.RTSPsocket.getOutputStream()) );
 
     //init RTSP state:
     state = INIT;
@@ -286,7 +288,7 @@ public class Client{
 	  timer.stop();
 
 	  //exit
-	  System.exit(0);
+	  //System.exit(0);
 	}
     }
   }
@@ -411,7 +413,6 @@ public class Client{
     catch(Exception ex)
       {
 	System.out.println("Exception caught: "+ex);
-	System.exit(0);
       }
   }
 

@@ -18,7 +18,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.Timer;
 
-public class Server extends JFrame implements ActionListener {
+public class ServerBean extends JFrame implements ActionListener {
 
   //RTP variables:
   //----------------
@@ -55,24 +55,21 @@ public class Server extends JFrame implements ActionListener {
   final static int PAUSE = 5;
   final static int TEARDOWN = 6;
 
-  static int state; //RTSP Server state == INIT or READY or PLAY
-  Socket RTSPsocket; //socket used to send/receive RTSP messages
+  public int state; //RTSP Server state == INIT or READY or PLAY
+  public Socket RTSPsocket; //socket used to send/receive RTSP messages
   //input and output stream filters
-  static BufferedReader RTSPBufferedReader;
-  static BufferedWriter RTSPBufferedWriter;
-  static String VideoFileName; //video file requested from the client
-  static int RTSP_ID = 123456; //ID of the RTSP session
-  int RTSPSeqNb = 0; //Sequence number of RTSP messages within the session
+  public BufferedReader RTSPBufferedReader;
+  public BufferedWriter RTSPBufferedWriter;
+  public String VideoFileName; //video file requested from the client
+  public int RTSP_ID = 123456; //ID of the RTSP session
+  public int RTSPSeqNb = 0; //Sequence number of RTSP messages within the session
 
   final static String CRLF = "\r\n";
 
   //--------------------------------
   //Constructor
   //--------------------------------
-  public Server(){
-
-    //init Frame
-    super("Server");
+  public ServerBean(){
 
     //init Timer
     timer = new Timer(FRAME_PERIOD, this);
@@ -94,106 +91,6 @@ public class Server extends JFrame implements ActionListener {
     label = new JLabel("Send frame #        ", JLabel.CENTER);
     getContentPane().add(label, BorderLayout.CENTER);
   }
-  
-  
-
-  //------------------------------------
-  //main
-  //------------------------------------
-  public static void main(String argv[]) throws Exception
-  {
-    //create a Server object
-    Server theServer = new Server();
-
-    //show GUI:
-    theServer.pack();
-    theServer.setVisible(true);
-
-    //get RTSP socket port from the command line
-    int RTSPport = Integer.parseInt(argv[0]);
-
-    //Initiate TCP connection with the client for the RTSP session
-    ServerSocket listenSocket = new ServerSocket(RTSPport);
-    theServer.RTSPsocket = listenSocket.accept();
-    listenSocket.close();
-
-    //Get Client IP address
-    theServer.ClientIPAddr = theServer.RTSPsocket.getInetAddress();
-
-    //Initiate RTSPstate
-    state = INIT;
-
-    //Set input and output stream filters:
-    RTSPBufferedReader = new BufferedReader(new InputStreamReader(theServer.RTSPsocket.getInputStream()) );
-    RTSPBufferedWriter = new BufferedWriter(new OutputStreamWriter(theServer.RTSPsocket.getOutputStream()) );
-
-    //Wait for the SETUP message from the client
-    int request_type;
-    boolean done = false;
-    while(!done)
-      {
-	request_type = theServer.parse_RTSP_request(); //blocking
-
-	if (request_type == SETUP)
-	  {
-	    done = true;
-
-	    //update RTSP state
-	    state = READY;
-	    System.out.println("New RTSP state: READY");
-
-	    //Send response
-	    theServer.send_RTSP_response();
-
-	    //init the VideoStream object:
-	    theServer.video = new VideoStream(VideoFileName);
-
-	    //init RTP socket
-	    theServer.RTPsocket = new DatagramSocket();
-	  }
-      }
-
-     //loop to handle RTSP requests
-    while(true)
-      {
-	//parse the request
-	request_type = theServer.parse_RTSP_request(); //blocking
-
-	if ((request_type == PLAY) && (state == READY))
-	  {
-	    //send back response
-	    theServer.send_RTSP_response();
-	    //start timer
-	    theServer.timer.start();
-	    //update state
-	    state = PLAYING;
-	    System.out.println("New RTSP state: PLAYING");
-	  }
-	else if ((request_type == PAUSE) && (state == PLAYING))
-	  {
-	    //send back response
-	    theServer.send_RTSP_response();
-	    //stop timer
-	    theServer.timer.stop();
-	    //update state
-	    state = READY;
-	    System.out.println("New RTSP state: READY");
-	  }
-	else if (request_type == TEARDOWN)
-	  {
-	    //send back response
-	    theServer.send_RTSP_response();
-	    //stop timer
-	    theServer.timer.stop();
-	    //close sockets
-	    theServer.RTSPsocket.close();
-	    theServer.RTPsocket.close();
-
-	    System.exit(0);
-	  }
-      }
-  }
-
 
   //------------------------
   //Handler for timer
