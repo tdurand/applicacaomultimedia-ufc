@@ -86,8 +86,10 @@ public class ServerThread extends Thread {
           }
           }
 
+        boolean threadON=true;
+        
          //loop to handle RTSP requests
-        while(true)
+        while(threadON)
           {
         //parse the request
         request_type = server.parse_RTSP_request(); //blocking
@@ -118,7 +120,11 @@ public class ServerThread extends Thread {
             server.send_RTSP_response();
             //stop timer
             server.timer.stop();
+            
+            server.setVisible(false);
+            threadON=false;
             //close sockets
+            
             try {
                 server.RTSPsocket.close();
             } catch (IOException e) {
@@ -126,6 +132,7 @@ public class ServerThread extends Thread {
                 e.printStackTrace();
             }
             server.RTPsocket.close();
+            
           }
           }
     }

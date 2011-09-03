@@ -288,7 +288,7 @@ public class Client{
 	  timer.stop();
 
 	  //exit
-	  //System.exit(0);
+	  System.exit(0);
 	}
     }
   }
