@@ -13,11 +13,11 @@ import java.net.SocketException;
 public class ServerThread extends Thread {
     
     private Socket socket;
-    private ServerBean server;
+    private Server server;
 
     public ServerThread(Socket socket) {
         this.socket=socket;
-        this.server=new ServerBean();
+        this.server=new Server();
     }
 
     @Override
