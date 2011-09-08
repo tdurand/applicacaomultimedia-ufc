@@ -221,19 +221,3 @@ public class RTPpacket{
       return(256+nb);
   }
 }
-  //--------------------------
-  //print headers without the SSRC
-  //--------------------------
-//  public void printheader()
-//  {
-//    //TO DO: uncomment
-//    /*
-//    for (int i=0; i < (HEADER_SIZE-4); i++)
-//      {
-//	for (int j = 7; j>=0 ; j--)
-//	  if (((1<= 0)
-//      return(nb);
-//    else
-//      return(256+nb);
-//  }
-//}
