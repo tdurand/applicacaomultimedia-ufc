@@ -2,9 +2,9 @@ package pratica01;
   //How to use the client
   //----------------
   //1.    Compile with javac 
-  //2.    Run : *java Client [Server hostname] [Server RTSP listening port] [Video file requested path] [Listening RTP Client Port]*
+  //2.    Run : *java Client [Server hostname] [Server RTSP listening port] [Video file requested path] [RTP Client Port Listening]*
   //
-  //      example: `java 127.0.0.1 3000 src/pratica01/movie.Mjpeg 2500`
+  //      example: `java Client 127.0.0.1 3000 src/pratica01/movie.Mjpeg 2500`
 import java.io.*;
 import java.net.*;
 import java.util.*;

@@ -4,6 +4,10 @@
  */
 
 package pratica01;
+
+//Description
+//-----------
+// Server who can handle an unique client
 /* ------------------
    Server
    usage: java Server [RTSP listening port]
