@@ -1,8 +1,4 @@
 package pratica01;
-/* ------------------
-   Client
-   usage: java Client [Server hostname] [Server RTSP listening port] [Video file requested]
-   ---------------------- */
   //How to use the client
   //----------------
   //1.    Compile with javac 
