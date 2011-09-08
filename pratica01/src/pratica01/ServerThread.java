@@ -2,7 +2,7 @@ package pratica01;
 
 //Description
 //----------
-// A ServerThread is instantiate in a Thread for each Client connected to MultiServer.
+// A ServerThread is instantiated in a Thread for each Client connected to MultiServer.
 //
 // It basicaly set up a RTSP connection with the Client, and instantiate a Server.java to handle the RTP connection. 
 //

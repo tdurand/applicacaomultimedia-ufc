@@ -1,5 +1,9 @@
 package pratica01;
 
+//Description
+//-----------
+//RTPpacket permit to build the data frames sended to the client on the RTP Port. 
+
 public class RTPpacket{
   //Variables
   //---------

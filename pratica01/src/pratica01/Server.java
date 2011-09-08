@@ -2,7 +2,7 @@ package pratica01;
 
     //Description
     //-----------
-    // Server.java has been modified to only contain variables and methods needed to parse the responds, and to send the responds to the client. 
+    // Server.java has been modified to only contain variables and methods needed to parse the messages, and to send the responds to the client. 
     // 
     // Receipt of RTSP messages are managed by the ServerThread.java, who call the right methods of Server.java to answer to the client.
 

@@ -12,9 +12,9 @@ package pratica01;
 import java.net.ServerSocket;
 
 public class MultiServer {
-    //Main
+    //Description
     //------------------------------------
-    // This class listen requests on the port "RTSP port", and instantiate a Server in a new Thread for each Client who want to connect.
+    // This class listen requests on the port "RTSP port", and instantiate a ServerThread in a new Thread for each Client who try to connect.
     public static void main(String argv[]) throws Exception
     {
         boolean listening=true;
