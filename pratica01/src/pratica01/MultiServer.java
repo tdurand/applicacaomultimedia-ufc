@@ -14,7 +14,7 @@ import java.net.ServerSocket;
 public class MultiServer {
     //Description
     //------------------------------------
-    // This class listen requests on the port "RTSP port", and instantiate a ServerThread in a new Thread for each Client who try to connect.
+    // This class listens requests on the port "RTSP port", and instantiates a ServerThread in a new Thread for each Client who tries to connect.
     public static void main(String argv[]) throws Exception
     {
         boolean listening=true;
@@ -25,7 +25,7 @@ public class MultiServer {
         //* create the socket to listen to 
         ServerSocket listenSocket = new ServerSocket(RTSPport);
         
-        //* listen infinitely on port "RTSP" port, and instantiate a Server in a new Thread if a client wants to be connected 
+        //* listen infinitely on port "RTSP" port, and instantiates a Server in a new Thread if a client wants to be connected 
         while(listening) {
             new ServerThread(listenSocket.accept()).start();
         }
