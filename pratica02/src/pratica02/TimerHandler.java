@@ -18,15 +18,21 @@ public class TimerHandler implements ActionListener {
     public static int VIDEO_LENGTH = 500; //length of the video in framess
     
     public TimerHandler(String videoFileName) throws Exception {
-        this.videoStream=new VideoStream(videoFileName);
+        try {
+            this.videoStream=new VideoStream(videoFileName);
+        } catch (Exception e) {
+            System.out.println("Wrong video path");
+        }
+        buf = new byte[15000];
     }
 
     //Handler for timer
     //------------------------
     @Override
     public void actionPerformed(ActionEvent e) {
+      System.out.println("Timer tick");
       //*if still have client connected
-      if(Server.datagramSocketList.size() > 0) {
+      if(Server.clientList.size() > 0) {
           //* if the current image nb is less than the length of the video
           if (currentImageNb < VIDEO_LENGTH)
             {
@@ -48,9 +54,10 @@ public class TimerHandler implements ActionListener {
             rtp_packet.getpacket(packet_bits);
     
             //* For each client connected, send the packets
-            for (Iterator<DatagramSocket> iterator = Server.datagramSocketList.iterator(); iterator.hasNext();) {
-                DatagramSocket aDatagramSocket = (DatagramSocket) iterator.next();
-                aDatagramSocket.send(new DatagramPacket(packet_bits, packet_length));
+            for (Iterator<Listener> iterator = Server.clientList.iterator(); iterator.hasNext();) {
+                Listener aClient = (Listener) iterator.next();
+                System.out.println("Sending datagramPacket");
+                aClient.getDatagramSocket().send(new DatagramPacket(packet_bits, packet_length,aClient.getClientAddress(),aClient.getRTPClientPort()));
             }
             //* print the header bitstream (just one time for all)
             rtp_packet.printheader();
@@ -67,6 +74,7 @@ public class TimerHandler implements ActionListener {
             }
         }
         else {
+            System.out.println("There is no more clients connected, stopping timer");
             //*there is no more client connected
             //*reinit framenb
             currentImageNb=0;

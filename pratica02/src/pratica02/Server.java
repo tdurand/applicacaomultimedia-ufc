@@ -1,6 +1,10 @@
 package pratica02;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -14,7 +18,7 @@ import javax.swing.Timer;
 public class Server implements Runnable {
     
     ///###Shared variables
-    public static List<DatagramSocket> datagramSocketList=new ArrayList<DatagramSocket>();;
+    public static List<Listener> clientList=new ArrayList<Listener>();
     public static Timer timer;
     
     //###Usefull Constants
@@ -74,8 +78,8 @@ public class Server implements Runnable {
 
         //*Init datagramSocket and add the server in the list to start sending
         try {
-            datagramSocket = new DatagramSocket(RTPClientPort,clientIPAddr); //TODO understand why it don't works
-            
+            datagramSocket = new DatagramSocket(); //TODO understand why it don't works
+            startSending(datagramSocket,RTPClientPort,clientIPAddr);
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -89,18 +93,28 @@ public class Server implements Runnable {
     }
     //Start sending frame to the client
     //-------------------------------
-    public void startSending(DatagramSocket datagramSocket) {
+    public void startSending(DatagramSocket datagramSocket,int RTPClientPort,InetAddress clientIPAddr) {
+        System.out.println("startSending to Client on port: "+RTPClientPort);
+        Listener newClient=new Listener(datagramSocket, RTPClientPort, clientIPAddr);
+        
+        if(Server.clientList.size()==0) {
+            System.out.println("Starting timer");
+            Server.timer.start();
+        }
+        
         try {
+            
             //*Add client into the list
-            synchronized (datagramSocket) {
-                datagramSocketList.add(datagramSocket);
+            synchronized (clientList) {
+                System.out.println("add Client on port: "+RTPClientPort);
+                clientList.add(newClient);
             }
             waitRSTPMessage(TEARDOWN);
         }
         finally {
             //*When the user click on TEARDOWN, why remove the client from the list
-            synchronized (datagramSocket) {
-                datagramSocketList.remove(datagramSocket);
+            synchronized (clientList) {
+                clientList.remove(newClient);
             }
         }
     }
@@ -179,7 +193,10 @@ public class Server implements Runnable {
         boolean done = false;
         while(!done) {
             request_type = parse_RTSP_request(); //blocking
-            if (request_type == message) { done = true;}
+            if (request_type == message) { 
+                done = true;
+                System.out.println("RTSP message : "+message+" received");
+            }
         }
     }
 

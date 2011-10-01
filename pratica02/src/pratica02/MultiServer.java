@@ -36,7 +36,6 @@ public class MultiServer {
         //* listen infinitely on port "RTSP" port, and instantiates a Server in a new Thread if a client wants to be connected 
         while(true) {
             Server newServer=new Server(listenSocket.accept());
-            if(Server.datagramSocketList.size()==0) Server.timer.start();//TODO mettre ailleur le timer start (peut etre dans le call setup, verifié si c'est le premier client, et alors demarre le timer)
             new Thread(newServer).start();
         }
         
