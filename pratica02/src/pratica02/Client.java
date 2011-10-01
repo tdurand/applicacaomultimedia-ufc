@@ -109,8 +109,8 @@ public class Client{
     String ServerHost = argv[0];
     InetAddress ServerIPAddr = InetAddress.getByName(ServerHost);
     
-    //* get RTP Receive Port from the command line
-    theClient.RTP_RCV_PORT = Integer.parseInt(argv[2]);
+    //* find free port
+    theClient.RTP_RCV_PORT=findFreePort();
 
     //* establish a TCP connection with the server to exchange RTSP messages
     theClient.RTSPsocket = new Socket(ServerIPAddr, RTSP_server_port);
@@ -322,6 +322,15 @@ public class Client{
       {
 	System.out.println("Exception caught: "+ex);
       }
+  }
+  
+  public static int findFreePort()
+  throws IOException {
+      ServerSocket server =
+          new ServerSocket(0);
+      int port = server.getLocalPort();
+      server.close();
+      return port;
   }
 
 }//end of Class Client
