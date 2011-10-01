@@ -78,7 +78,7 @@ public class Server implements Runnable {
 
         //*Init datagramSocket and add the server in the list to start sending
         try {
-            datagramSocket = new DatagramSocket(); //TODO understand why it don't works
+            datagramSocket = new DatagramSocket();
             startSending(datagramSocket,RTPClientPort,clientIPAddr);
         } catch (SocketException e) {
             e.printStackTrace();
