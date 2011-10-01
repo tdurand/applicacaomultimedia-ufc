@@ -10,7 +10,7 @@ import java.io.*;
 
 public class VideoStream {
 
-  FileInputStream fis; //video file
+  RandomAccessFile fis; //video file
   int frame_nb; //current frame nb
 
   //-----------------------------------
@@ -18,8 +18,7 @@ public class VideoStream {
   //-----------------------------------
   public VideoStream(String filename) throws Exception{
 
-    //init variables
-    fis = new FileInputStream(filename);
+    fis = new RandomAccessFile(filename, "r");
     frame_nb = 0;
   }
 
@@ -41,5 +40,14 @@ public class VideoStream {
     length = Integer.parseInt(length_string);
 
     return(fis.read(frame,0,length));
+  }
+  
+  public void reset() {
+      try {
+        fis.seek(0);
+    } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
   }
 }

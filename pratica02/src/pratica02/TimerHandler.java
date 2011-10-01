@@ -24,6 +24,7 @@ public class TimerHandler implements ActionListener {
             System.out.println("Wrong video path");
         }
         buf = new byte[15000];
+        currentImageNb=0;
     }
 
     //Handler for timer
@@ -70,7 +71,9 @@ public class TimerHandler implements ActionListener {
             }
           else {
                 //*if we have reached the end of the video file, reinit at the begining
+                System.out.println("End of video, reinit");
                 currentImageNb=0;
+                videoStream.reset();
             }
         }
         else {
@@ -78,6 +81,7 @@ public class TimerHandler implements ActionListener {
             //*there is no more client connected
             //*reinit framenb
             currentImageNb=0;
+            videoStream.reset();
             //*stop timer
             Server.timer.stop();
         }
