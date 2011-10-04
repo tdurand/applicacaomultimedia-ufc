@@ -112,7 +112,7 @@ public class Server implements Runnable {
             waitRSTPMessage(TEARDOWN);
         }
         finally {
-            //*When the user click on TEARDOWN, why remove the client from the list
+            //*When the user click on TEARDOWN, we remove the client from the list
             synchronized (clientList) {
                 clientList.remove(newClient);
             }
