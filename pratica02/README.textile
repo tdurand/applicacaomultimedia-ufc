@@ -14,6 +14,7 @@ h4. Como é realizado o controle de entrada e saída de novos usuários?
 p. Entrada:
 * O cliente clica no "setup"
 * O cliente é adicionado à lista.
+
 bc. //*Add client into the list
                 synchronized (clientList) {
                     System.out.println("add Client on port: "+RTPClientPort);
