@@ -14,31 +14,31 @@ h4. Como é realizado o controle de entrada e saída de novos usuários?
 p. Entrada:
 * O cliente clica no "setup"
 * O cliente é adicionado à lista.
-@//*Add client into the list
+bc. //*Add client into the list
                 synchronized (clientList) {
                     System.out.println("add Client on port: "+RTPClientPort);
                     clientList.add(newClient);
-}@
+}
 
 p. Saida:
 * O cliente clica no "teardown"
 * O cliente é removido da lista
 
-@//*When the user click on TEARDOWN, we remove the client from the list
+bc. //*When the user click on TEARDOWN, we remove the client from the list
                 synchronized (clientList) {
                     clientList.remove(newClient);
-}@
+}
 
 h4. Como o servidor identifica o primeiro usuário, para iniciar uma sessão de difusão, e o último usuário, para encerrá-la?
 
 p. O servidor olha o tamanho da lista:
 
-@if(Server.clientList.size()==0) {
+bc. if(Server.clientList.size()==0) {
             System.out.println("Starting timer");
             Server.timer.start();
-        }@
+        }
         
-@//*if still have client connected
+bc. //*if still have client connected
      if(Server.clientList.size() > 0) {
          ...
          else {
@@ -49,7 +49,7 @@ p. O servidor olha o tamanho da lista:
                      videoStream.reset();
                      //*stop timer
                      Server.timer.stop();
-        }@
+        }
 
 h4. Como são controlados os endereços/portas para emissão dos pacotes RTP?
 
