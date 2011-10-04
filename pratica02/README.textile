@@ -1,4 +1,6 @@
-h2. Como o servidor identifica a lista de usuários conectados?
+h3. Documentação
+
+h4. Como o servidor identifica a lista de usuários conectados?
 
 p. Com uma variavel "clientList"
 
@@ -7,7 +9,7 @@ p. Com uma variavel "clientList"
 p. Variável clientList contém todos os clientes que estão conectados e ter clicado no "Setup"
     
 
-h2. Como é realizado o controle de entrada e saída de novos usuários?
+h4. Como é realizado o controle de entrada e saída de novos usuários?
 
 p. Entrada:
 * O cliente clica no "setup"
@@ -27,7 +29,7 @@ p. Saida:
                     clientList.remove(newClient);
 }@
 
-h2. Como o servidor identifica o primeiro usuário, para iniciar uma sessão de difusão, e o último usuário, para encerrá-la?
+h4. Como o servidor identifica o primeiro usuário, para iniciar uma sessão de difusão, e o último usuário, para encerrá-la?
 
 p. O servidor olha o tamanho da lista:
 
@@ -49,20 +51,20 @@ p. O servidor olha o tamanho da lista:
                      Server.timer.stop();
         }@
 
-h2. Como são controlados os endereços/portas para emissão dos pacotes RTP?
+h4. Como são controlados os endereços/portas para emissão dos pacotes RTP?
 
 p. Eles são armazenados na lista "clientList" para cada cliente.
 
 * A porta para os dados RTP é fornecido pelo cliente durante o "Setup".
 * O endereço é obtido utilizando o método "getInetAddress"
 
-h2. Como o servidor faz para enviar os quadros “simultaneamente” para todos os clientes conectados?
+h4. Como o servidor faz para enviar os quadros “simultaneamente” para todos os clientes conectados?
 
 p. A cada "tick do relógio", ele passa a lista de clientes e envia os dados.
 
-@//* For each client connected, send the packets
+bc. //* For each client connected, send the packets
             for (Iterator<Listener> iterator = Server.clientList.iterator(); iterator.hasNext();) {
                 Listener aClient = (Listener) iterator.next();
                 System.out.println("Sending datagramPacket");
                 aClient.getDatagramSocket().send(new DatagramPacket(packet_bits, packet_length,aClient.getClientAddress(),aClient.getRTPClientPort()));
-            }@
+}
