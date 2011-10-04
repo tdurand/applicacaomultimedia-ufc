@@ -1,5 +1,12 @@
 h3. Documentação
 
+h4. Como usar?
+
+*Run o multiserver: @java MultiServer [Server RTSP listening port]@
+
+*Iniciar varios clientes: @java Client [Server hostname] [Server RTSP listening port]@
+
+
 h4. Como o servidor identifica a lista de usuários conectados?
 
 p. Com uma variavel "clientList"
