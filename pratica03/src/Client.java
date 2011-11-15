@@ -13,12 +13,14 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.Timer;
 
+import message.Register;
+
 public class Client{
   //Variables
   //---------
   //###GUI variables
   JFrame f = new JFrame("Client");
-  JButton setupButton = new JButton("Setup");
+  JButton registerButton = new JButton("Register");
   JButton tearButton = new JButton("Teardown");
   JPanel mainPanel = new JPanel();
   JPanel buttonPanel = new JPanel();
@@ -68,10 +70,9 @@ public class Client{
 
     //* init buttons linked to handlers
     buttonPanel.setLayout(new GridLayout(1,0));
-    buttonPanel.add(setupButton);
+    buttonPanel.add(registerButton);
     buttonPanel.add(tearButton);
-    setupButton.addActionListener(new setupButtonListener());
-    tearButton.addActionListener(new tearButtonListener());
+    registerButton.addActionListener(new registerButtonListener());
 
     //* image display label
     iconLabel.setIcon(null);
@@ -87,10 +88,6 @@ public class Client{
     f.setSize(new Dimension(390,370));
     f.setVisible(true);
 
-    //###Init timer
-    timer = new Timer(20, new timerListener());
-    timer.setInitialDelay(0);
-    timer.setCoalesce(true);
 
     //###Init buffer
     //* allocate enough memory for the buffer used to receive data from the server
@@ -118,9 +115,6 @@ public class Client{
     //* set input and output stream filters:
     theClient.RTSPBufferedReader = new BufferedReader(new InputStreamReader(theClient.RTSPsocket.getInputStream()) );
     theClient.RTSPBufferedWriter = new BufferedWriter(new OutputStreamWriter(theClient.RTSPsocket.getOutputStream()) );
-
-    //* init RTSP state:
-    state = INIT;
     
     System.out.println("Init Success");
   }
@@ -129,163 +123,34 @@ public class Client{
   //------------------------------------
 
   //### Setup button handler
-  class setupButtonListener implements ActionListener{
+  class registerButtonListener implements ActionListener{
     public void actionPerformed(ActionEvent e){
 
-      System.out.println("Setup Button pressed !");
-
-      if (state == INIT)
-	{
-	  //*    init non-blocking RTPsocket that will be used to receive data
-	  try{
-	  //    *construct a new DatagramSocket to receive RTP packets from the server, on port RTP_RCV_PORT*
-	    RTPsocket = new DatagramSocket(RTP_RCV_PORT);
-
-	  //    *set TimeOut value of the socket to 5msec.*
-	    RTPsocket.setSoTimeout(5);
-
-	  }
-	  catch (SocketException se)
-	    {
-	      System.out.println("Socket exception: "+se);
-	      System.exit(0);
-	    }
-
-	  //* init RTSP sequence number
-	  RTSPSeqNb = 1;
-
-	  //* send SETUP message to the server
-	  send_RTSP_request("SETUP");
+      System.out.println("Register Button pressed !");
+      
+      Register messRegister=new Register("tib", "test", 2993);
+      
+      try {
+        RTSPBufferedWriter.write(messRegister.writeMessage());
+        RTSPBufferedWriter.flush();
+    } catch (IOException e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+    }
+      
+      
+	  
 
 	  //* wait for the response
-	  if (parse_server_response() != 200)
-	    System.out.println("Invalid Server Response");
-	  else
-	    {
-	      //* change RTSP state and print new state
-	      state = READY;
-	      System.out.println("New RTSP state: READY");
-	      timer.start();
-	    }
-	}//else if state != INIT then do nothing
+	  
     }
   }
 
-    //### Teardown button handler
-  class tearButtonListener implements ActionListener {
-    public void actionPerformed(ActionEvent e){
-
-      System.out.println("Teardown Button pressed !");
-
-      //* increase RTSP sequence number
-      RTSPSeqNb++;
-
-      //* send TEARDOWN message to the server
-      send_RTSP_request("TEARDOWN");
-
-      //* wait for the response
-      if (parse_server_response() != 200)
-	System.out.println("Invalid Server Response");
-      else
-	{
-	  //* change RTSP state and print out new state
-      state=INIT;
-	  System.out.println("New RTSP state: INIT");
-
-	  //* stop the timer
-	  timer.stop();
-
-	  //* exit
-	  System.exit(0);
-	}
-    }
-  }
   
-  //Handler for timer
-  //------------------------------------
-  //*It read the data socket (RTPsocket) and display the frame every tick*
-  class timerListener implements ActionListener {
-    public void actionPerformed(ActionEvent e) {
+  
+  
 
-      //* construct a DatagramPacket to receive data from the UDP socket
-      rcvdp = new DatagramPacket(buf, buf.length);
-
-      try{
-	//* receive the DP from the socket:
-	RTPsocket.receive(rcvdp);
-
-	//* create an RTPpacket object from the DP
-	RTPpacket rtp_packet = new RTPpacket(rcvdp.getData(), rcvdp.getLength());
-
-	//* print important header fields of the RTP packet received:
-	System.out.println("Got RTP packet with SeqNum # "+rtp_packet.getsequencenumber()+" TimeStamp "+rtp_packet.gettimestamp()+" ms, of type "+rtp_packet.getpayloadtype());
-
-	//* print header bitstream:
-	rtp_packet.printheader();
-
-	//* get the payload bitstream from the RTPpacket object
-	int payload_length = rtp_packet.getpayload_length();
-	byte [] payload = new byte[payload_length];
-	rtp_packet.getpayload(payload);
-
-	//* get an Image object from the payload bitstream
-	Toolkit toolkit = Toolkit.getDefaultToolkit();
-	Image image = toolkit.createImage(payload, 0, payload_length);
-
-	//* display the image as an ImageIcon object
-	icon = new ImageIcon(image);
-	iconLabel.setIcon(icon);
-      }
-      catch (InterruptedIOException iioe){
-	System.out.println("Nothing to read");
-      }
-      catch (IOException ioe) {
-	System.out.println("Exception caught: "+ioe);
-      }
-    }
-  }
-
-  //Parse Server Response
-  //------------------------------------
-  //*Function use to read and parse the information sended by the server on the RTSP socket*  
-  //*return 200 if OK, 0 else*
-  private int parse_server_response()
-  {
-    int reply_code = 0;
-
-    try{
-      //parse status line and extract the reply_code:
-      String StatusLine = RTSPBufferedReader.readLine();
-      System.out.println("RTSP Client - Received from Server:");
-      System.out.println(StatusLine);
-
-      StringTokenizer tokens = new StringTokenizer(StatusLine);
-      tokens.nextToken(); //skip over the RTSP version
-      reply_code = Integer.parseInt(tokens.nextToken());
-
-      //if reply code is OK get and print the 2 other lines
-      if (reply_code == 200)
-	{
-	  String SeqNumLine = RTSPBufferedReader.readLine();
-	  System.out.println(SeqNumLine);
-
-	  String SessionLine = RTSPBufferedReader.readLine();
-	  System.out.println(SessionLine);
-
-	  //if state == INIT gets the Session Id from the SessionLine
-	  tokens = new StringTokenizer(SessionLine);
-	  tokens.nextToken(); //skip over the Session:
-	  RTSPid = Integer.parseInt(tokens.nextToken());
-	}
-    }
-    catch(Exception ex)
-      {
-	System.out.println("Exception caught: "+ex);
-	System.exit(0);
-      }
-
-    return(reply_code);
-  }
+ 
 
   //Send RTSP Request
   //------------------------------------
