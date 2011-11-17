@@ -20,6 +20,7 @@ public abstract class Message {
     public int getClientCommunicationControlPort() {return 0;}
     public List<String> getClientList() {return null;}
     public String getDestinationAddress() { return null;}
+    public String getDestinationPort() {return null;}
     /**
      * @return the type
      */

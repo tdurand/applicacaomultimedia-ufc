@@ -8,7 +8,7 @@ import java.net.InetAddress;
 public class ClientConnected {
     
     private int clientclientCommunicationPort;
-    private InetAddress clientAddress;
+    private String clientAddress;
     private BufferedWriter buffWriter;
     private BufferedReader buffReader;
     private String clientName;
@@ -19,7 +19,7 @@ public class ClientConnected {
             BufferedReader buffReader, String clientName) {
         super();
         this.clientclientCommunicationPort = clientclientCommunicationPort;
-        this.clientAddress = clientAddress;
+        this.clientAddress = clientAddress.getCanonicalHostName();
         this.buffWriter = buffWriter;
         this.buffReader = buffReader;
         this.clientName = clientName;
@@ -45,7 +45,7 @@ public class ClientConnected {
     /**
      * @return the clientAddress
      */
-    public InetAddress getClientAddress() {
+    public String getClientAddress() {
         return clientAddress;
     }
 
@@ -53,7 +53,7 @@ public class ClientConnected {
     /**
      * @param clientAddress the clientAddress to set
      */
-    public void setClientAddress(InetAddress clientAddress) {
+    public void setClientAddress(String clientAddress) {
         this.clientAddress = clientAddress;
     }
 

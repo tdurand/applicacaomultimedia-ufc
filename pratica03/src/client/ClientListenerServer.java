@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Iterator;
 
 import client.ihm.ClientList;
@@ -14,12 +15,12 @@ import message.MessError;
 import message.Message;
 import utils.Parsing;
 
-public class ClientListener implements ActionListener {
+public class ClientListenerServer implements ActionListener {
     
     public Client client;
 
 
-    public ClientListener(Client client) {
+    public ClientListenerServer(Client client) {
     // TODO Auto-generated constructor stub
         this.client=client;
     }
@@ -39,6 +40,11 @@ public class ClientListener implements ActionListener {
                         if(message.getDestinationAddress()!=null) {
                             client.clientListWindow.label.setText(message.writeMessage());
                             client.incomeCall.setVisible(false);
+                            
+                            InetAddress adresseClientP2P=InetAddress.getByName(message.getDestinationAddress());
+                            
+                            client.clientListenerP2P.connectToOtherClient(adresseClientP2P, Integer.parseInt(message.getDestinationPort()));
+                            
                         }
                     }
                     else if(message.getType().equals("CLIENTS")) {
