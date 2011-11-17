@@ -79,7 +79,6 @@ public class Client{
     String ServerHost = argv[0];
     InetAddress ServerIPAddr = InetAddress.getByName(ServerHost);
     
-    theClient.userName=argv[2];
     
     theClient.p2pClientPort=findFreePort();
 
