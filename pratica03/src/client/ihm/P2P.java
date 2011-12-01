@@ -12,6 +12,9 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 
 import client.Client;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
@@ -19,8 +22,8 @@ import java.awt.Color;
 public class P2P extends JFrame {
 
     public JPanel contentPane;
-    public JTextField textField;
-    public JTextArea textArea;
+    public JTextArea textInput;
+    public JTextArea chat;
     public Client client;
     
     /**
@@ -29,7 +32,7 @@ public class P2P extends JFrame {
     public P2P(Client theClient) {
         this.client = theClient;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 450, 300);
+        setBounds(100, 100, 450, 281);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -42,16 +45,25 @@ public class P2P extends JFrame {
                 client.clientListenerP2P.sendTextMessage();
             }
         });
-        btnSend.setBounds(315, 224, 117, 29);
+        btnSend.setBounds(317, 221, 117, 25);
         contentPane.add(btnSend);
         
-        textField = new JTextField();
-        textField.setBounds(69, 223, 222, 28);
-        contentPane.add(textField);
-        textField.setColumns(10);
+        JButton btnClose = new JButton("Close");
+		btnClose.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO BYE
+			}
+		});
+		btnClose.setBounds(0, 221, 117, 25);
+		contentPane.add(btnClose);
         
-        textArea = new JTextArea();
-        textArea.setBounds(69, 20, 245, 191);
-        contentPane.add(textArea);
+        textInput = new JTextArea();
+        textInput.setBounds(0, 164, 434, 51);
+        contentPane.add(textInput);
+        textInput.setColumns(10);
+        
+        chat = new JTextArea();
+        chat.setBounds(0, 0, 434, 161);
+        contentPane.add(chat);
     }
 }

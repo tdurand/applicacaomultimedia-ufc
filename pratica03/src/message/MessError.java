@@ -25,8 +25,8 @@ public class MessError extends Message {
     @Override
     public void parseMessage(List<StringTokenizer> tokens) {
         description=tokens.get(0).nextToken();
-            //log
-            System.out.println(type+" "+description);
+        //log
+        System.out.println(type+" "+description);
     }
 
     @Override

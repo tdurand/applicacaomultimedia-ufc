@@ -88,7 +88,8 @@ public class ClientListenerServer implements ActionListener {
                               }
                         }
                         else {
-                            client.incomeCall.label.setText(message.getUserName());
+                        	client.p2pClient = message.getUserName();
+                            client.incomeCall.label.setText(client.p2pClient);
                             client.incomeCall.setLocationRelativeTo(client.clientListWindow);
                             client.incomeCall.setVisible(true);
                         }

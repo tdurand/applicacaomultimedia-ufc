@@ -70,7 +70,7 @@ public class ClientListenerP2P implements ActionListener,Runnable {
                           numberRows = Integer.parseInt(token);
                           System.out.println("Numero de linhas: "+numberRows);
                           line = str.substring(token.length()+1, str.length());
-                          System.out.println("Substrng: #" + line);
+                          System.out.println("Substring: #" + line);
                           count++;
                       }
                       while(count < numberRows){
@@ -78,8 +78,8 @@ public class ClientListenerP2P implements ActionListener,Runnable {
                           count++;
                       }
                       if(!line.equals("")){
-                          client.windowP2P.textArea.append(line+Constants.CRLF);
-                          client.windowP2P.textArea.update(client.windowP2P.textArea.getGraphics());
+                          client.windowP2P.chat.append(client.p2pClient + ": " + line + "\n");
+                          client.windowP2P.chat.update(client.windowP2P.chat.getGraphics());
                           str = null;
                       }
                 }
@@ -143,12 +143,12 @@ public class ClientListenerP2P implements ActionListener,Runnable {
     
     public void sendTextMessage() {
         try{
-            String text = client.windowP2P.textField.getText();
+            String text = client.windowP2P.textInput.getText();
             
             int total = 0;
 
             for (int i = 0; i <text.length(); i++) {
-                    if (client.windowP2P.textField.getText().charAt(i) == " ".charAt(0))  {
+                    if (client.windowP2P.textInput.getText().charAt(i) == " ".charAt(0))  {
                         total++;
                     }
             }
@@ -158,7 +158,9 @@ public class ClientListenerP2P implements ActionListener,Runnable {
             textBufferedWriter.write(rows + " " + text + Constants.CRLF);
             System.out.println("client.windowP2P.textField.getText(): " + text );
             textBufferedWriter.flush();
-            client.windowP2P.textField.setText("");
+            
+            client.windowP2P.textInput.setText("");
+            client.windowP2P.chat.append("me: " + text + "\n");
         }catch(Exception ex){
             System.out.println("Exception in sendButtonListener: " + ex);
             System.exit(0);

@@ -102,6 +102,7 @@ public class Server implements Runnable {
                    userList.sendMessage(userName, new MessError("404"));
                }
            }
+           // Cliente aceitou uma chamada
            else if(message.getType().equals("200")) {
                ClientConnected clientConnected=userList.searchClient(userName);
                if(clientConnected.caller!="") {
@@ -110,6 +111,7 @@ public class Server implements Runnable {
                    clientConnected.caller="";
                }
            }
+           // Cliente recusou uma chamada
            else if(message.getType().equals("603")) {
                ClientConnected clientConnected=userList.searchClient(userName);
                if(clientConnected.caller!="") {
