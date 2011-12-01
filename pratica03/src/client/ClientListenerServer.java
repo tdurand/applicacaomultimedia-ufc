@@ -34,8 +34,7 @@ public class ClientListenerServer implements ActionListener {
                 Message message= Parsing.parseMessage(client.bufferedReader); //blocking
                 if(message!=null) {
                     System.out.println("Received message: "+message.writeMessage());
-                    if(message.getType().equals("200")) 
-                    {
+                    if(message.getType().equals("200")) {
                         System.out.println("OK");
                         if(message.getDestinationAddress()!=null) {
                             client.clientListWindow.label.setText(message.writeMessage());
@@ -74,6 +73,7 @@ public class ClientListenerServer implements ActionListener {
                     else if(message.getType().equals("603")) {
                         client.clientListWindow.label.setText(message.writeMessage());
                         client.clientListWindow.btnCall.setEnabled(true);
+                        client.p2pClient = "";
                     }
                     else if(message.getType().equals("INVITE")) {
                         if(client.occuped) {

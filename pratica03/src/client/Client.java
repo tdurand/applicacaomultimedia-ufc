@@ -173,7 +173,8 @@ public class Client{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+		
+		p2pClient = name;
 		clientListWindow.btnCall.setEnabled(false);
 	}
 
@@ -207,7 +208,7 @@ public class Client{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+		
 		incomeCall.setVisible(false);
 		clientListWindow.btnCall.setEnabled(true);
 	}
